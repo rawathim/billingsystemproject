@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <style>
+    .box{
+      
+        display:flex;
+        float:left;
+        background-image: url("https://wi.wallpapertip.com/wsimgs/83-838362_web-developer.jpg");
+         width:100%;
+         height:700px;
+    
+  
+    }
+    .box1{
+      width: 400px;
+      height:450px;
+      border: 2px solid rgb(121, 113, 113);
+      text-align: center;
+      margin-left: 200px;
+      background-color: rgba(0, 0, 0, 0.75);
+      color:white;
+      margin-top: 100px;
+    }
+    input{
+      border:2px solid black;
+      width:350px;
+      height:30px;
+      margin-bottom: 30px;
+    }
+    .box3{
+      border: 2px solid black;
+      width:400px;
+      height:450px;
+      margin-top: 100px;
+
+    }
+
+    table {
+    /* font-family: arial, sans-serif; */
+     border-collapse: collapse;
+      width:100%;
+       
+       background-color: rgba(0,0,0,0.60);
+;
+     color:white;
+   }
+   td, th {
+       border: 2px solid rgb(121, 113, 113);
+       border-radius:20px;
+        text-align: center;
+        padding: 10px;
+       }
+
+      
+   
+  </style>
+</head>
+<body>
+  <div class="box">
+  <div class="box1">
+    <h1>BILLING SHOP</h1>
+  <input type="text" id="name" placeholder="NAME THE PRODUCT"></input>
+  <input type="number" id="qty" placeholder="ENTER THE QUANTITY"></input>
+  <input type="number"  id="amt" placeholder="ENTER THE AMOUNT"></input>
+  <button id="btn" onClick="calculate()">TOTAL</button>
+  <button id="btn" onClick="clean()">CLEAR</button><br><br>
+
+
+     
+       <label>TOTAL BILL</label>
+       <input type="number" id="total" placeholder="TOTAL"></input>
+
+       <button id="btn" onClick="clearData()">NEW DATA</button><br><br> 
+       
+    
+
+</div>
+
+
+
+
+  <div class="box3">
+    <table id="user">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Qty</th>
+            <th>Amt</th>
+            <th>Total</th>
+          
+        </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+  </table>
+  </div>
+
+  <script>
+
+    function getData(){
+       let userlist;
+
+      if(localStorage.getItem("userlist")==null)
+      {
+        userlist=[];
+
+      }
+      else{
+        userlist=JSON.parse(localStorage.getItem("userlist"));
+        console.log("userlist id is ",userlist);
+      }
+     return userlist
+    } 
+     userlist=getData()
+
+
+
+function clearData(){
+    localStorage.clear()
+   }
+
+   
+
+function clean(){
+  var name=document.getElementById("name")
+      var qty=document.getElementById("qty")
+    var amt=document.getElementById("amt")
+    var total=document.getElementById("total")
+    
+  total.value=""
+  name.value=""
+  qty.value=""
+  amt.value=""
+
+}
+
+
+  
+
+    function calculate(){
+  
+      var name=document.getElementById("name").value
+      var qty=document.getElementById("qty").value
+    var amt=document.getElementById("amt").value
+    var total=document.getElementById("total")
+
+  var tp=qty*amt;
+    console.log(tp);
+    total.value=tp.toFixed(2);
+
+
+    if(validate()==true){
+   
+      var name=document.getElementById("name").value
+      var qty=document.getElementById("qty").value
+    var amt=document.getElementById("amt").value
+    var total=document.getElementById("total").value
+
+    if(qty>0 && amt>0){
+     var tp=qty*amt;
+    console.log(tp);
+    total=tp.toFixed(2);
+  }
+  else{
+    total.value="";
+  }
+   
+     getData();
+
+      userlist.push({
+        name:name,
+        qty:qty,
+        amt:amt,
+        total:total
+
+      });
+
+      localStorage.setItem("userlist", JSON.stringify(userlist));
+      console.log("data added succesfully");
+      showData();
+
+      }
+   
+  }
+
+
+  function validate(){
+    var name=document.getElementById("name").value;
+    if(name=="")
+    {
+      alert("Name can't be blank")
+      return false;
+    }
+
+    var qty=document.getElementById("qty").value;
+    if(qty=="")
+    {
+      alert("qty can't be blank")
+      return false;
+    }
+
+    var amt=document.getElementById("amt").value;
+    if(amt=="")
+    {
+      alert("value can't be blank")
+      return false;
+    }
+   
+    else{
+      return true;
+    }
+    
+  }
+
+
+  function showData(){
+    getData();
+
+      let html="";
+
+      userlist.forEach((element,index)=>{
+        html+="<tr>";
+          html+="<td>"+element.name+"</td>"
+          html+="<td>"+element.qty+"</td>"
+          html+="<td>"+element.amt+"</td>"
+          
+          html+="<td>"+element.total+"</td>"
+        
+          html+=`<td> <button onclick="deleteData(${index})" >X</button></td>`;
+
+
+          html+="</tr>"
+      
+             
+        })
+       document.querySelector('#user tbody').innerHTML=html;
+      }
+  showData();
+
+
+
+function deleteData(index)
+ {
+ getData();
+userlist.splice(index,1);
+localStorage.setItem("userlist", JSON.stringify(userlist));
+showData();
+
+}
+ showData();
+
+
+
+
+  </script>
+</body>
+</html>
